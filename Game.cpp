@@ -2,6 +2,7 @@
 
 void Game::start() {
 	snake.startSnake();
+	loop();
 }
 
 void Game::viewBoard() {

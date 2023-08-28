@@ -6,8 +6,6 @@ int main() {
 	Game game{};
 	game.start();
 
-	game.loop();
-
 	SDL_Quit();
 
 	return 0;
