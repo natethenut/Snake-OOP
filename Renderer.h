@@ -26,6 +26,7 @@ private:
 	std::unique_ptr<SDL_Window, SDLWindowDestroyer> window;
 	std::unique_ptr<SDL_Renderer, SDLRendererDestroyer> renderer;
 
+	//Easier to see what color will be presented without thinking about rgb values mixing	
 	const int redflag = 255;
 	const int whiteflag = 255;
 	const int grayflag = 70;
