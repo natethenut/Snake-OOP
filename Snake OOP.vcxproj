@@ -133,9 +133,10 @@
     <ClCompile Include="Snake.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Snake.h" />
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Globals.hpp" />
+    <ClInclude Include="Renderer.hpp" />
+    <ClInclude Include="Snake.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

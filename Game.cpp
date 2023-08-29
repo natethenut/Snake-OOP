@@ -1,66 +1,59 @@
-#include "Game.h"
+#include <chrono>
 
-void Game::start() {
-	snake.startSnake();
+#include "Game.hpp"
+
+Game::Game() {
+	gen.seed(std::chrono::system_clock::now().time_since_epoch().count());
 	loop();
 }
 
-void Game::viewBoard() {
-	for (int i = 0; i < GAME_WIDTH; i++) {
-		for (int j = 0; j < GAME_HEIGHT; j++) {
-			if (board[j * GAME_WIDTH + i]) {
-				renderer.color = board[j * GAME_WIDTH + i] == 2 ? Renderer::Color::Red : Renderer::Color::White;
-				renderer.drawBoard(i, j, SIZE, renderer.color);
-			}
-		}
+void Game::renderApple() {
+	int x = (apple % game_width);
+	int y = (apple - x) / game_width;
+	renderer.draw(x, y, size, PieceToDraw::Apple);
+}
+
+void Game::renderSnake() {
+	for (int i = 0; i < snake.getSnakeSize(); ++i) {
+		int x = (snake.getSnake()[i] % game_width);
+		int y = (snake.getSnake()[i] - x) / game_width;
+		renderer.draw(x, y, size, PieceToDraw::Snake);
 	}
 }
 
-void Game::addToBoard() {
-	for (int i = 0; i < snake.getSize(); i++) {
-		board[snake.getSnake()[i]] = 1;
+void Game::gotApple() {
+	if (snake.gotApple(apple)) {
+		newApple();
 	}
-
-	board[snake.getApple()] = 2;
 }
 
-bool Game::isValidMove(Moves move) {
-	switch (move) {
-	case Moves::Left:
-		return (snake.getSnake()[0] - 1 != snake.getSnake()[1]);
-	case Moves::Right:
-		return (snake.getSnake()[0] + 1 != snake.getSnake()[1]);
-	case Moves::Up:
-		return (snake.getSnake()[0] - GAME_WIDTH != snake.getSnake()[1]);
-	case Moves::Down:
-		return (snake.getSnake()[0] + GAME_WIDTH != snake.getSnake()[1]);
-	}
-	return false;
-}
-
-void Game::makeMove(SDL_Event &e) {
+void Game::makeMove() {
 	while (SDL_PollEvent(&e) != 0) {
 		switch (e.type) {
 		case SDL_QUIT:
-			move = Moves::Quit;
+			quit = true;
 			break;
 		case SDL_KEYDOWN:
 			switch (e.key.keysym.sym) {
 			case SDLK_LEFT:
-				if (isValidMove(Moves::Left))
+				if (snake.isValidMove(Moves::Left)) {
 					move = Moves::Left;
+				}
 				break;
 			case SDLK_RIGHT:
-				if (isValidMove(Moves::Right))
+				if (snake.isValidMove(Moves::Right)) {
 					move = Moves::Right;
+				}
 				break;
 			case SDLK_DOWN:
-				if (isValidMove(Moves::Down))
+				if (snake.isValidMove(Moves::Down)) {
 					move = Moves::Down;
+				}
 				break;
 			case SDLK_UP:
-				if (isValidMove(Moves::Up))
+				if (snake.isValidMove(Moves::Up)) {
 					move = Moves::Up;
+				}
 				break;
 			default:
 				break;
@@ -72,28 +65,32 @@ void Game::makeMove(SDL_Event &e) {
 }
 
 void Game::loop() {
-	SDL_Event e;
-	while (move != Moves::Quit) {
+	while (!quit) {
 		renderer.clearRenderer();
-		makeMove(e);
-		updateBoard();
 		if (!snake.hasCollided()) {
-			addToBoard();
-			viewBoard();
+			makeMove();
+			snake.updateSnake(move);
+			gotApple();
+			renderSnake();
+			renderApple();
 			renderer.drawBorder();
 			renderer.showRenderer();
 		}
 		else {
-			move = Moves::Quit;
+			quit = true;
 		}
 
 		SDL_Delay(100);
 	}
+	SDL_Quit();
 }
 
-void Game::updateBoard() {
-	snake.updateSnake((int)move);
-	board[snake.getSnake()[snake.getSize()]] = 0; //Instead of clearing the entire board and refilling it, 
-	//just remove the snake's tail after it moves
+void Game::newApple() {
+	std::uniform_int_distribution<int> randPos(0, snake.getSnake().size() - 1);
+	apple = randPos(gen);
+
+	while (snake.isSnakeBody(apple)) {
+		apple = randPos(gen);
+	}
 }
 
