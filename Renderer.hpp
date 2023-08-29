@@ -19,6 +19,13 @@ struct SDLRendererDestroyer {
 };
 
 class Renderer {
+public:
+	const Renderer();
+	void clearRenderer() const;
+	void showRenderer() const;
+	void draw(int x, int y, int size, PieceToDraw piece) const;
+	void drawBorder() const;
+
 private:
 	std::unique_ptr<SDL_Window, SDLWindowDestroyer> window;
 	std::unique_ptr<SDL_Renderer, SDLRendererDestroyer> renderer;
@@ -31,10 +38,4 @@ private:
 	const std::uint8_t fullopacity = 255;
 	const std::uint8_t noflag = 0;
 
-public:
-	const Renderer();
-	void clearRenderer() const;
-	void showRenderer() const;
-	void draw(int x, int y, int size, PieceToDraw piece) const;
-	void drawBorder() const;
 };

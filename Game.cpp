@@ -7,6 +7,27 @@ Game::Game() {
 	loop();
 }
 
+void Game::loop() {
+	while (!quit) {
+		renderer.clearRenderer();
+		if (!snake.hasCollided()) {
+			makeMove();
+			snake.updateSnake(move);
+			gotApple();
+			renderSnake();
+			renderApple();
+			renderer.drawBorder();
+			renderer.showRenderer();
+		}
+		else {
+			quit = true;
+		}
+
+		SDL_Delay(100);
+	}
+	SDL_Quit();
+}
+
 void Game::renderApple() {
 	int x = (apple % game_width);
 	int y = (apple - x) / game_width;
@@ -18,12 +39,6 @@ void Game::renderSnake() {
 		int x = (snake.getSnake()[i] % game_width);
 		int y = (snake.getSnake()[i] - x) / game_width;
 		renderer.draw(x, y, size, PieceToDraw::Snake);
-	}
-}
-
-void Game::gotApple() {
-	if (snake.gotApple(apple)) {
-		newApple();
 	}
 }
 
@@ -64,25 +79,10 @@ void Game::makeMove() {
 	}
 }
 
-void Game::loop() {
-	while (!quit) {
-		renderer.clearRenderer();
-		if (!snake.hasCollided()) {
-			makeMove();
-			snake.updateSnake(move);
-			gotApple();
-			renderSnake();
-			renderApple();
-			renderer.drawBorder();
-			renderer.showRenderer();
-		}
-		else {
-			quit = true;
-		}
-
-		SDL_Delay(100);
+void Game::gotApple() {
+	if (snake.gotApple(apple)) {
+		newApple();
 	}
-	SDL_Quit();
 }
 
 void Game::newApple() {
@@ -93,4 +93,3 @@ void Game::newApple() {
 		apple = randPos(gen);
 	}
 }
-

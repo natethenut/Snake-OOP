@@ -17,9 +17,7 @@ public:
 	void makeMove();
 	void gotApple();
 	void newApple();
-	int getApple() const& {
-		return apple;
-	}
+
 private:
 	std::default_random_engine gen;
 	int apple = game_height / 2 * game_width + (game_width * 2) / 3; //calculation for apple coordinates (apple % width) = x

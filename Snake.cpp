@@ -33,6 +33,24 @@ void Snake::updateSnake(Moves &move) {
 	snake[0] += direction;
 }
 
+bool Snake::hasCollided() const& {
+	if (snake[0] % game_width == 0 && snake[1] % game_width == game_width - 1) {
+		return true;
+	}
+	if (snake[0] % game_width == game_width - 1 && snake[1] % game_width == 0) {
+		return true;
+	}
+	if (snake[0] < 0 || snake[0] > (game_width * game_height)) {
+		return true;
+	}
+	for (int i = snakeSize - 1; i > 0; --i) {
+		if (snake[0] == snake[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
 bool Snake::isValidMove(Moves move) const& {
 	switch (move) {
 	case Moves::Right:
@@ -50,24 +68,6 @@ bool Snake::isValidMove(Moves move) const& {
 
 bool Snake::isSnakeBody(int position) const& {
 	return std::find(std::begin(snake), std::end(snake), position) != std::end(snake);
-}
-
-bool Snake::hasCollided() const& {
-	if (snake[0] % game_width == 0 && snake[1] % game_width == game_width - 1) {
-		return true;
-	}
-	if (snake[0] % game_width == game_width - 1 && snake[1] % game_width == 0) {
-		return true;
-	}
-	if (snake[0] < 0 || snake[0] > (game_width * game_height)) {
-		return true;
-	}
-	for (int i = snakeSize - 1; i > 0; --i) {
-		if (snake[0] == snake[i]) {
-			return true;
-		}
-	}
-	return false;
 }
 
 bool Snake::gotApple(int apple) {
