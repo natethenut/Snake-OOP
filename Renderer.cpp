@@ -11,7 +11,7 @@ void Renderer::clearRenderer() const{
 	SDL_RenderClear(renderer.get());
 }
 
-void Renderer::draw(int x, int y, int size, PieceToDraw piece) const{
+void Renderer::draw(const int x, const int y, const int size, const PieceToDraw& piece) const{
 	switch (piece) {
 	case PieceToDraw::Apple:
 		SDL_SetRenderDrawColor(renderer.get(), redflag, noflag, noflag, fullopacity);

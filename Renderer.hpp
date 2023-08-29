@@ -23,7 +23,7 @@ public:
 	const Renderer();
 	void clearRenderer() const;
 	void showRenderer() const;
-	void draw(int x, int y, int size, PieceToDraw piece) const;
+	void draw(const int x, const int y, const int size, const PieceToDraw& piece) const;
 	void drawBorder() const;
 
 private:

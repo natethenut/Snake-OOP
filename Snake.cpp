@@ -6,7 +6,7 @@ Snake::Snake() {
 	snake[2] = snake[1] - 1;
 }
 
-void Snake::updateSnake(Moves &move) {
+void Snake::updateSnake(const Moves &move) {
 	int i = snakeSize;
 	while (i > 0) {
 		snake[i] = snake[i - 1];
@@ -51,7 +51,7 @@ bool Snake::hasCollided() const& {
 	return false;
 }
 
-bool Snake::isValidMove(Moves move) const& {
+bool Snake::isValidMove(const Moves& move) const& {
 	switch (move) {
 	case Moves::Right:
 		return (snake[0] + 1 != snake[1]);
@@ -66,11 +66,11 @@ bool Snake::isValidMove(Moves move) const& {
 	}
 }
 
-bool Snake::isSnakeBody(int position) const& {
+bool Snake::isSnakeBody(const int position) const& {
 	return std::find(std::begin(snake), std::end(snake), position) != std::end(snake);
 }
 
-bool Snake::gotApple(int apple) {
+bool Snake::gotApple(const int apple) {
 	if (snake[0] == apple) {
 		++snakeSize;
 		return true;
